@@ -11,6 +11,7 @@ namespace MsBuildProjectReferenceDependencyGraph
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Xml.Linq;
 
     /// <summary>
@@ -26,12 +27,15 @@ namespace MsBuildProjectReferenceDependencyGraph
                 Environment.Exit(1);
             }
 
+            // See if the anonymize flag has been sent
+            bool anonymizeNames = args.Any(current => Regex.IsMatch(current, @"^[-\/]+([a]{1}|anonymize)$"));
+
             string targetProject = args.First();
 
             // TODO: We need to have this support SLN files at some point, don't bother right now though
             Dictionary<string, IEnumerable<string>> projectReferenceDependencies = ResolveProjectReferenceDependencies(new string[] { targetProject });
 
-            string output = CreateDOTGraph(projectReferenceDependencies);
+            string output = CreateDOTGraph(projectReferenceDependencies, anonymizeNames);
 
             Console.WriteLine(output);
         }
@@ -83,10 +87,17 @@ namespace MsBuildProjectReferenceDependencyGraph
         /// Given a Dictionary in which the Key Represents the Project and the Value represents the list Project Dependencies, generate a DOT Graph.
         /// </summary>
         /// <param name="projectReferenceDependencies">The dictionary to generate the graph for.</param>
+        /// <param name="anonymizeNames">Determines if the names should be anonymized.</param>
         /// <returns>A string that represents a DOT Graph</returns>
-        private static string CreateDOTGraph(Dictionary<string, IEnumerable<string>> projectReferenceDependencies)
+        private static string CreateDOTGraph(Dictionary<string, IEnumerable<string>> projectReferenceDependencies, bool anonymizeNames)
         {
-            // At this point we should have everything resolved
+            // If we are going to use a anonymizer initialize it
+            Anonymizer<string> anonymizer = null;
+            if (anonymizeNames)
+            {
+                anonymizer = new Anonymizer<string>();
+            }
+
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine("digraph {");
@@ -95,9 +106,20 @@ namespace MsBuildProjectReferenceDependencyGraph
             {
                 string projectName = Path.GetFileName(kvp.Key);
 
+                if (anonymizeNames)
+                {
+                    projectName = anonymizer.Anonymoize(projectName);
+                }
+
                 foreach (string projectDependency in kvp.Value)
                 {
                     string projectDependencyName = Path.GetFileName(projectDependency);
+
+                    if (anonymizeNames)
+                    {
+                        projectDependencyName = anonymizer.Anonymoize(projectDependencyName);
+                    }
+
                     sb.AppendLine($"\"{projectName}\" -> \"{projectDependencyName}\"");
                 }
             }
