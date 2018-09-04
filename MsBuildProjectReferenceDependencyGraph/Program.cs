@@ -30,10 +30,22 @@ namespace MsBuildProjectReferenceDependencyGraph
             // See if the anonymize flag has been sent
             bool anonymizeNames = args.Any(current => Regex.IsMatch(current, @"^[-\/]+([a]{1}|anonymize)$"));
 
-            string targetProject = args.First();
+            string targetArgument = args.First();
 
-            // TODO: We need to have this support SLN files at some point, don't bother right now though
-            Dictionary<string, IEnumerable<string>> projectReferenceDependencies = ResolveProjectReferenceDependencies(new string[] { targetProject });
+            List<string> projectsToEvaluate = new List<string>();
+
+            if (Path.GetExtension(targetArgument).Equals(".sln", StringComparison.InvariantCultureIgnoreCase))
+            {
+                IEnumerable<string> projectsInSolution = MSBuildUtilities.GetProjectsFromSolution(targetArgument);
+                projectsToEvaluate.AddRange(projectsInSolution);
+            }
+            else
+            {
+                // Assume its just a single project
+                projectsToEvaluate.Add(targetArgument);
+            }
+
+            Dictionary<string, IEnumerable<string>> projectReferenceDependencies = ResolveProjectReferenceDependencies(projectsToEvaluate);
 
             string output = CreateDOTGraph(projectReferenceDependencies, anonymizeNames);
 
