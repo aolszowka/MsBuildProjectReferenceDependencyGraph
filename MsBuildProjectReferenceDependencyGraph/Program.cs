@@ -12,7 +12,6 @@ namespace MsBuildProjectReferenceDependencyGraph
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
-    using System.Xml.Linq;
 
     /// <summary>
     /// Toy program to generate a DOT Graph of all ProjectReference dependencies of a project.
@@ -77,7 +76,7 @@ namespace MsBuildProjectReferenceDependencyGraph
                 {
 
                     // Get all this projects references
-                    string[] projectDependencies = ProjectDependencies(currentProject).ToArray();
+                    string[] projectDependencies = MSBuildUtilities.ProjectDependencies(currentProject).ToArray();
 
                     resolvedProjects.Add(currentProject, projectDependencies);
 
@@ -141,25 +140,5 @@ namespace MsBuildProjectReferenceDependencyGraph
             return sb.ToString();
         }
 
-        /// <summary>
-        /// Given a path to a file that is assumed to be an MSBuild Type Project file, Return all ProjectReference Paths as fully qualified paths.
-        /// </summary>
-        /// <param name="targetProject">The project to load.</param>
-        /// <returns>An IEnumerable that contains all the fully qualified ProjectReference paths.</returns>
-        static IEnumerable<string> ProjectDependencies(string targetProject)
-        {
-            XNamespace msbuildNS = "http://schemas.microsoft.com/developer/msbuild/2003";
-
-            XDocument projXml = XDocument.Load(targetProject);
-
-            IEnumerable<XElement> projectReferences = projXml.Descendants(msbuildNS + "ProjectReference");
-
-            foreach (XElement projectReference in projectReferences)
-            {
-                string relativeProjectPath = projectReference.Attribute("Include").Value;
-                string resolvedPath = PathUtilities.ResolveRelativePath(Path.GetDirectoryName(targetProject), relativeProjectPath);
-                yield return resolvedPath;
-            }
-        }
     }
 }
