@@ -7,7 +7,9 @@
 namespace MsBuildProjectReferenceDependencyGraph
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
 
     /// <summary>
     /// Utility class for dealing with Paths.
@@ -24,11 +26,6 @@ namespace MsBuildProjectReferenceDependencyGraph
         public static string GetRelativePath(string path1, string path2)
         {
             return GetRelativePath(new FileInfo(path1), new FileInfo(path2));
-        }
-
-        internal static string ResolveRelativePath(object pathtargetProject, string relativeProjectPath)
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -67,6 +64,16 @@ namespace MsBuildProjectReferenceDependencyGraph
             Uri relativeUri = uri1.MakeRelativeUri(uri2);
 
             return Uri.UnescapeDataString(relativeUri.OriginalString);
+        }
+
+        /// <summary>
+        /// Given an <see cref="IEnumerable{T}"/> of paths "expand" them to their local paths.
+        /// </summary>
+        /// <param name="paths">The paths to "expand".</param>
+        /// <returns>All of the paths "expanded"</returns>
+        public static IEnumerable<string> ResolveRelativePaths(IEnumerable<string> paths)
+        {
+            return paths.Select(currentRelativePath => Path.GetFullPath((new Uri(currentRelativePath)).LocalPath));
         }
 
         /// <summary>

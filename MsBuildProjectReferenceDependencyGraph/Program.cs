@@ -36,6 +36,11 @@ namespace MsBuildProjectReferenceDependencyGraph
             if (Path.GetExtension(targetArgument).Equals(".sln", StringComparison.InvariantCultureIgnoreCase))
             {
                 IEnumerable<string> projectsInSolution = MSBuildUtilities.GetProjectsFromSolution(targetArgument);
+
+                // These come back as relative paths; we need to "expand" them
+                // otherwise we'll get duplicates when we go to resolve.
+                projectsInSolution = PathUtilities.ResolveRelativePaths(projectsInSolution);
+
                 projectsToEvaluate.AddRange(projectsInSolution);
             }
             else
@@ -74,7 +79,6 @@ namespace MsBuildProjectReferenceDependencyGraph
                 // First check just to make sure it wasn't already resolved.
                 if (!resolvedProjects.ContainsKey(currentProject))
                 {
-
                     // Get all this projects references
                     string[] projectDependencies = MSBuildUtilities.ProjectDependencies(currentProject).ToArray();
 
