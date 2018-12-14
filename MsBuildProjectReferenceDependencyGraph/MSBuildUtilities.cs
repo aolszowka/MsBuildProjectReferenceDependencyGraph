@@ -19,9 +19,15 @@
         /// <returns>The fully qualified paths to all of the projects in the solution.</returns>
         public static IEnumerable<string> GetProjectsFromSolution(string targetSolutionFile)
         {
+            string solutionFolder = Path.GetDirectoryName(targetSolutionFile);
             SolutionFile solution = SolutionFile.Parse(targetSolutionFile);
 
-            return solution.ProjectsInOrder.Select(project => project.AbsolutePath);
+            return
+                solution
+                .ProjectsInOrder
+                .Where(project => project.ProjectType == SolutionProjectType.KnownToBeMSBuildFormat)
+                .Select(project => project.RelativePath)
+                .Select(projectRelativePath => PathUtilities.ResolveRelativePath(solutionFolder, projectRelativePath));
         }
 
         /// <summary>
