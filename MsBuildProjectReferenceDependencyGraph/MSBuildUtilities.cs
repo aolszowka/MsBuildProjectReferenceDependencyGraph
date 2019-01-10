@@ -25,9 +25,40 @@
             return
                 solution
                 .ProjectsInOrder
-                .Where(project => project.ProjectType == SolutionProjectType.KnownToBeMSBuildFormat)
+                .Where(project => IsSupportedProjectType(project))
                 .Select(project => project.RelativePath)
                 .Select(projectRelativePath => PathUtilities.ResolveRelativePath(solutionFolder, projectRelativePath));
+        }
+
+        /// <summary>
+        /// Determines if the Project Type is Known Supported
+        /// </summary>
+        /// <param name="project">The project to evaluate.</param>
+        /// <returns><c>true</c> if this project is supported by this tool; otherwise, <c>false</c>.</returns>
+        private static bool IsSupportedProjectType(ProjectInSolution project)
+        {
+            bool supportedType = false;
+
+            if (project.ProjectType == SolutionProjectType.KnownToBeMSBuildFormat)
+            {
+                supportedType = true;
+            }
+            else
+            {
+                // You can add additional supported types here
+                string[] knownMsBuildProjectTypes = new string[]
+                {
+                    ".csproj",
+                    ".vbproj",
+                    ".synproj"
+                };
+
+                string filePath = Path.GetExtension(project.AbsolutePath);
+
+                supportedType = knownMsBuildProjectTypes.Any(knownProjectType => filePath.Equals(knownProjectType, System.StringComparison.InvariantCultureIgnoreCase));
+            }
+
+            return supportedType;
         }
 
         /// <summary>
