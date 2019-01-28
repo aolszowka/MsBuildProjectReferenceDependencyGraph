@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
 // <copyright file="Program.cs" company="Ace Olszowka">
-// Copyright (c) 2018 Ace Olszowka.
+// Copyright (c) 2018-2019 Ace Olszowka.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -29,6 +29,9 @@ namespace MsBuildProjectReferenceDependencyGraph
             // See if the anonymize flag has been sent
             bool anonymizeNames = args.Any(current => Regex.IsMatch(current, @"^[-\/]+([a]{1}|anonymize)$"));
 
+            // See if the Sort Flag has been set
+            bool sortOutput = args.Any(current => Regex.IsMatch(current, @"^[-\/]+([s]{1}|sort)$"));
+
             string targetArgument = args.First();
 
             List<string> projectsToEvaluate = new List<string>();
@@ -51,7 +54,7 @@ namespace MsBuildProjectReferenceDependencyGraph
 
             Dictionary<string, IEnumerable<string>> projectReferenceDependencies = ResolveProjectReferenceDependencies(projectsToEvaluate);
 
-            string output = CreateDOTGraph(projectReferenceDependencies, anonymizeNames);
+            string output = CreateDOTGraph(projectReferenceDependencies, anonymizeNames, sortOutput);
 
             Console.WriteLine(output);
         }
@@ -104,7 +107,7 @@ namespace MsBuildProjectReferenceDependencyGraph
         /// <param name="projectReferenceDependencies">The dictionary to generate the graph for.</param>
         /// <param name="anonymizeNames">Determines if the names should be anonymized.</param>
         /// <returns>A string that represents a DOT Graph</returns>
-        private static string CreateDOTGraph(Dictionary<string, IEnumerable<string>> projectReferenceDependencies, bool anonymizeNames)
+        private static string CreateDOTGraph(IEnumerable<KeyValuePair<string, IEnumerable<string>>> projectReferenceDependencies, bool anonymizeNames, bool sortProjects)
         {
             // If we are going to use a anonymizer initialize it
             Anonymizer<string> anonymizer = null;
@@ -117,6 +120,11 @@ namespace MsBuildProjectReferenceDependencyGraph
 
             sb.AppendLine("digraph {");
 
+            if (sortProjects)
+            {
+                projectReferenceDependencies = projectReferenceDependencies.OrderBy(kvp => Path.GetFileName(kvp.Key));
+            }
+
             foreach (KeyValuePair<string, IEnumerable<string>> kvp in projectReferenceDependencies)
             {
                 string projectName = Path.GetFileName(kvp.Key);
@@ -126,7 +134,14 @@ namespace MsBuildProjectReferenceDependencyGraph
                     projectName = anonymizer.Anonymoize(projectName);
                 }
 
-                foreach (string projectDependency in kvp.Value)
+                IEnumerable<string> projectReferences = kvp.Value;
+
+                if (sortProjects)
+                {
+                    projectReferences = projectReferences.OrderBy(filePath => Path.GetFileName(filePath));
+                }
+
+                foreach (string projectDependency in projectReferences)
                 {
                     string projectDependencyName = Path.GetFileName(projectDependency);
 
