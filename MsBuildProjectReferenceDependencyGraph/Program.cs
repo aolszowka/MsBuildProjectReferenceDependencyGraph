@@ -141,6 +141,8 @@ namespace MsBuildProjectReferenceDependencyGraph
                     projectReferences = projectReferences.OrderBy(filePath => Path.GetFileName(filePath));
                 }
 
+                sb.AppendLine($"\"{projectName}\"");
+
                 foreach (string projectDependency in projectReferences)
                 {
                     string projectDependencyName = Path.GetFileName(projectDependency);
