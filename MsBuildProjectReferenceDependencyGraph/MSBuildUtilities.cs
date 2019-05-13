@@ -1,4 +1,10 @@
-﻿namespace MsBuildProjectReferenceDependencyGraph
+﻿// -----------------------------------------------------------------------
+// <copyright file="MSBuildUtilities.cs" company="Ace Olszowka">
+// Copyright (c) 2018-2019 Ace Olszowka.
+// </copyright>
+// -----------------------------------------------------------------------
+
+namespace MsBuildProjectReferenceDependencyGraph
 {
     using System.Collections.Generic;
     using System.IO;
