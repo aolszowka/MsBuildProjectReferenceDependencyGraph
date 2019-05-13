@@ -56,7 +56,7 @@ namespace MsBuildProjectReferenceDependencyGraph
 
             Dictionary<string, IEnumerable<string>> projectReferenceDependencies = MSBPRDependencyGraph.ResolveProjectReferenceDependencies(projectsToEvaluate);
 
-            string output = MSBPRDependencyGraph.CreateDOTGraph(projectReferenceDependencies, targetProject, anonymizeNames, sortOutput);
+            string output = MSBPRDependencyGraph.CreateDOTGraph(projectReferenceDependencies, targetProject, anonymizeNames, sortOutput, false);
 
             Console.WriteLine(output);
         }

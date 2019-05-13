@@ -9,6 +9,7 @@ namespace MsBuildProjectReferenceDependencyGraph
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Xml.Linq;
     using Microsoft.Build.Construction;
 
@@ -17,6 +18,8 @@ namespace MsBuildProjectReferenceDependencyGraph
     /// </summary>
     public class MSBuildUtilities
     {
+        private static XNamespace msbuildNS = "http://schemas.microsoft.com/developer/msbuild/2003";
+
         /// <summary>
         ///     Gets an IEnumerable of strings representing the fully qualified
         /// paths to all of the projects referenced by the given solution.
@@ -68,14 +71,72 @@ namespace MsBuildProjectReferenceDependencyGraph
         }
 
         /// <summary>
+        /// Given a path to a file that is assumed to be an MSBuild Type Project file, Return all Assembly References.
+        /// </summary>
+        /// <param name="targetProject">The project to load.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> that contains all of the Assembly References.</returns>
+        public static IEnumerable<string> AssemblyReferences(string targetProject)
+        {
+            XDocument projXml = XDocument.Load(targetProject);
+
+            IEnumerable<XElement> assemblyReferences = projXml.Descendants(msbuildNS + "Reference");
+
+            foreach (XElement assemblyReferenceElement in assemblyReferences)
+            {
+                string result = assemblyReferenceElement.Attribute("Include").Value;
+
+                // For simplicity sake right now we will assume that the
+                // project contains all equivalent assembly references
+                // however it is possible that various projects could
+                // reference different versions of the target assembly
+                // in order to support this you'd need to return a more
+                // complex object out of here to do further processing to
+                // understand if the projects were referencing the same
+                // version of the dependent assembly.
+                try
+                {
+                    AssemblyName assemblyName = new AssemblyName(result);
+                    result = assemblyName.Name;
+                }
+                catch (FileLoadException)
+                {
+                    // This was not a .NET Assembly; IE was a Synergy Library
+                }
+
+                yield return result;
+            }
+        }
+
+        /// <summary>
+        /// Given a path to a file that is assumed to be an MSBuild Type Project file, Return all Package References.
+        /// </summary>
+        /// <param name="targetProject">The project to load.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> that contains all of the Package References.</returns>
+        public static IEnumerable<string> PackageReferences(string targetProject)
+        {
+            XDocument projXml = XDocument.Load(targetProject);
+
+            IEnumerable<XElement> packageReferences = projXml.Descendants(msbuildNS + "PackageReference");
+
+            foreach (XElement packageReferenceElement in packageReferences)
+            {
+                string packageName = packageReferenceElement.Attribute("Include").Value;
+
+                // Similar to the issue with Assembly References for simplicity
+                // sake we will assume that all projects reference the same
+                // package version; however if you need to start supporting
+                // multiple versions you'll need to improve this area.
+                yield return packageName;
+            }
+        }
+
+        /// <summary>
         /// Given a path to a file that is assumed to be an MSBuild Type Project file, Return all ProjectReference Paths as fully qualified paths.
         /// </summary>
         /// <param name="targetProject">The project to load.</param>
         /// <returns>An IEnumerable that contains all the fully qualified ProjectReference paths.</returns>
         public static IEnumerable<string> ProjectDependencies(string targetProject)
         {
-            XNamespace msbuildNS = "http://schemas.microsoft.com/developer/msbuild/2003";
-
             XDocument projXml = XDocument.Load(targetProject);
 
             IEnumerable<XElement> projectReferences = projXml.Descendants(msbuildNS + "ProjectReference");
