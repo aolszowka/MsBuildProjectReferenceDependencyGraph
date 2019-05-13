@@ -65,6 +65,7 @@ namespace MsBuildProjectReferenceDependencyGraph
         /// <param name="projectReferenceDependencies">The dictionary to generate the graph for.</param>
         /// <param name="targetProject">Determines the project (based on name) to be highlighted</param>
         /// <param name="anonymizeNames">Determines if the names should be anonymized.</param>
+        /// <param name="sortProjects">Determines if the output of the DOT Graph should be sorted.</param>
         /// <returns>A string that represents a DOT Graph</returns>
         internal static string CreateDOTGraph(IDictionary<string, IEnumerable<string>> projectReferenceDependencies, string targetProject, bool anonymizeNames, bool sortProjects)
         {
