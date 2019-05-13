@@ -27,10 +27,10 @@ namespace MsBuildProjectReferenceDependencyGraph
             }
 
             // See if the anonymize flag has been sent
-            bool anonymizeNames = args.Any(current => Regex.IsMatch(current, @"^[-\/]+([a]{1}|anonymize)$"));
+            bool anonymizeNames = args.Any(current => Regex.IsMatch(current.ToLowerInvariant(), @"^[-\/]+([a]{1}|anonymize)$"));
 
             // See if the Sort Flag has been set
-            bool sortOutput = args.Any(current => Regex.IsMatch(current, @"^[-\/]+([s]{1}|sort)$"));
+            bool sortOutput = args.Any(current => Regex.IsMatch(current.ToLowerInvariant(), @"^[-\/]+([s]{1}|sort)$"));
 
             string targetArgument = args.First();
 
