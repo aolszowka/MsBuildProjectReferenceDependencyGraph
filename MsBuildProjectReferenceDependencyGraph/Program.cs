@@ -31,9 +31,6 @@ namespace MsBuildProjectReferenceDependencyGraph
             // See if the Sort Flag has been set
             bool sortOutput = args.Any(current => Regex.IsMatch(current.ToLowerInvariant(), @"^[-\/]+([s]{1}|sort)$"));
 
-            // See if the target project flag has been set
-            string targetProject = _ParseForTargetProjectFlag(args);
-
             string targetArgument = args.First();
 
             List<string> projectsToEvaluate = new List<string>();
@@ -56,46 +53,9 @@ namespace MsBuildProjectReferenceDependencyGraph
 
             Dictionary<string, IEnumerable<string>> projectReferenceDependencies = MSBPRDependencyGraph.ResolveProjectReferenceDependencies(projectsToEvaluate);
 
-            string output = MSBPRDependencyGraph.CreateDOTGraph(projectReferenceDependencies, targetProject, anonymizeNames, sortOutput, false);
+            string output = MSBPRDependencyGraph.CreateDOTGraph(projectReferenceDependencies, anonymizeNames, sortOutput, false);
 
             Console.WriteLine(output);
-        }
-
-        /// <summary>
-        /// Parses the Input Arguments for the TargetProject Flag
-        /// </summary>
-        /// <param name="args">The arguments sent to this program.</param>
-        /// <returns>The value of the TargetProject Flag</returns>
-        private static string _ParseForTargetProjectFlag(string[] args)
-        {
-            string targetProject = string.Empty;
-
-            // If -TargetProject (-tp) 
-            for (int i = 0; i < args.Length; i++)
-            {
-                // All flags are treated case insensitive
-                string currentArg = args[i].ToLowerInvariant();
-                bool targetProjectFlag = Regex.IsMatch(currentArg, @"^[-\/]+(tp{1}|targetproject)$");
-
-                if (targetProjectFlag)
-                {
-                    // First ensure that we won't over index
-                    if (i++ < args.Length)
-                    {
-                        // Then the next argument is assumed to be the target project
-                        targetProject = args[i];
-
-                        // Stop processing for more arguments
-                        break;
-                    }
-                    else
-                    {
-                        Console.WriteLine("You must provide a target project with the -TargetProject flag");
-                    }
-                }
-            }
-
-            return targetProject;
         }
     }
 }

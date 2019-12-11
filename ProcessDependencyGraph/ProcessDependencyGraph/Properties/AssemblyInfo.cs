@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MsBuildProjectReferenceDependencyGraph.Tests")]
+[assembly: AssemblyTitle("ProcessDependencyGraph")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Ace Olszowka (GitHub @aolszowka)")]
-[assembly: AssemblyProduct("MsBuildProjectReferenceDependencyGraph.Tests")]
+[assembly: AssemblyProduct("ProcessDependencyGraph")]
 [assembly: AssemblyCopyright("Copyright © Ace Olszowka 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,9 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("d0c1ba06-3ed0-458f-8b6c-145dece7e97d")]
+[assembly: Guid("2afcbc23-ea9d-4fc5-bb61-8d6c343389c5")]
+
+[assembly: InternalsVisibleTo("ProcessDependencyGraph.Tests")]
 
 // Version information for an assembly consists of the following four values:
 //
