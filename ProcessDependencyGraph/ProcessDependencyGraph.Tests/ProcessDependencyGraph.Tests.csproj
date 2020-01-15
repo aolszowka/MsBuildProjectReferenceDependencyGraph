@@ -41,7 +41,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DotGraphTests.cs" />
     <Compile Include="IdentifyDirectDependencyCountsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -54,15 +53,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="DotGraphTests\TestCase1.g">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="DotGraphTests\TestCase2.g">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="DotGraphTests\TestCase3.g">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="IdentifyDirectDependencyCountsTests\TestCase1.g">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -83,6 +73,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\DotGraphUtilities\DotGraphUtilities.csproj">
+      <Project>{AC74D3B9-869C-46E9-8350-90533A431132}</Project>
+      <Name>DotGraphUtilities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ProcessDependencyGraph\ProcessDependencyGraph.csproj">
       <Project>{2afcbc23-ea9d-4fc5-bb61-8d6c343389c5}</Project>
       <Name>ProcessDependencyGraph</Name>

@@ -1,10 +1,10 @@
 ﻿// -----------------------------------------------------------------------
 // <copyright file="DotGraphTests.cs" company="Ace Olszowka">
-// Copyright (c) 2019 Ace Olszowka.
+// Copyright (c) 2019-2020 Ace Olszowka.
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace ProcessDependencyGraph.Tests
+namespace DotGraphUtilities.Tests
 {
     using System.Collections;
     using System.Collections.Generic;

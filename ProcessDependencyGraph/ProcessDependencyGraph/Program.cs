@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
 // <copyright file="Program.cs" company="Ace Olszowka">
-// Copyright (c) 2019 Ace Olszowka.
+// Copyright (c) 2019-2020 Ace Olszowka.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -11,6 +11,7 @@ namespace ProcessDependencyGraph
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
+    using DotGraphUtilities;
 
     class Program
     {

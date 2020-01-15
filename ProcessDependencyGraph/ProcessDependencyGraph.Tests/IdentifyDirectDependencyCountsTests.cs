@@ -4,6 +4,7 @@ namespace ProcessDependencyGraph.Tests
     using System.Collections;
     using System.Collections.Generic;
     using System.IO;
+    using DotGraphUtilities;
     using NUnit.Framework;
 
     [TestFixture]

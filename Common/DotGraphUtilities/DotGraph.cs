@@ -1,10 +1,10 @@
 ﻿// -----------------------------------------------------------------------
 // <copyright file="DotGraph.cs" company="Ace Olszowka">
-// Copyright (c) 2019 Ace Olszowka.
+// Copyright (c) 2019-2020 Ace Olszowka.
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace ProcessDependencyGraph
+namespace DotGraphUtilities
 {
     using System;
     using System.Collections.Generic;
@@ -14,9 +14,9 @@ namespace ProcessDependencyGraph
     /// <summary>
     /// Class Library for dealing with DotGraph Files
     /// </summary>
-    internal static class DotGraph
+    public static class DotGraph
     {
-        internal static IDictionary<string, SortedSet<string>> LoadDependencyGraph(string targetFile)
+        public static IDictionary<string, SortedSet<string>> LoadDependencyGraph(string targetFile)
         {
             IDictionary<string, SortedSet<string>> result = new SortedDictionary<string, SortedSet<string>>();
 
@@ -68,7 +68,7 @@ namespace ProcessDependencyGraph
         /// </summary>
         /// <param name="targetFile">The DOT Graph File to Parse</param>
         /// <returns>An <see cref="IEnumerable{string}"/> of the graph relationship</returns>
-        internal static IEnumerable<string> ParseForValidDigraphLines(string targetFile)
+        public static IEnumerable<string> ParseForValidDigraphLines(string targetFile)
         {
             IEnumerable<string> dotGraphLines = File.ReadLines(targetFile);
 
