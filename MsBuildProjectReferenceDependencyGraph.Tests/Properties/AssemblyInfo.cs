@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Ace Olszowka (GitHub @aolszowka)")]
 [assembly: AssemblyProduct("MsBuildProjectReferenceDependencyGraph.Tests")]
-[assembly: AssemblyCopyright("Copyright © Ace Olszowka 2019")]
+[assembly: AssemblyCopyright("Copyright © Ace Olszowka 2019-2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
