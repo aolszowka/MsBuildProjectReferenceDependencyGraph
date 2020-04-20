@@ -58,8 +58,8 @@ namespace MsBuildProjectReferenceDependencyGraph
                 string[] knownMsBuildProjectTypes = new string[]
                 {
                     ".csproj",
-                    ".vbproj",
                     ".synproj",
+                    ".vbproj",
                 };
 
                 string filePath = Path.GetExtension(project.AbsolutePath);
