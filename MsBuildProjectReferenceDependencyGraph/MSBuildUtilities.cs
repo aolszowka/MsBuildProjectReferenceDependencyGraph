@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
 // <copyright file="MSBuildUtilities.cs" company="Ace Olszowka">
-// Copyright (c) 2018-2019 Ace Olszowka.
+// Copyright (c) 2018-2020 Ace Olszowka.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -59,7 +59,7 @@ namespace MsBuildProjectReferenceDependencyGraph
                 {
                     ".csproj",
                     ".vbproj",
-                    ".synproj"
+                    ".synproj",
                 };
 
                 string filePath = Path.GetExtension(project.AbsolutePath);
