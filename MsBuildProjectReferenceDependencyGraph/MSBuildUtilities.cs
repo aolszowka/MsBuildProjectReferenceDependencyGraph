@@ -58,6 +58,7 @@ namespace MsBuildProjectReferenceDependencyGraph
                 string[] knownMsBuildProjectTypes = new string[]
                 {
                     ".csproj",
+                    ".sqlproj",
                     ".synproj",
                     ".vbproj",
                 };
