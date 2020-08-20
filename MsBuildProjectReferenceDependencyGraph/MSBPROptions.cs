@@ -22,7 +22,7 @@ namespace MsBuildProjectReferenceDependencyGraph
         public bool SortProjects { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to show Assembly/Package References
+        /// Gets or sets a value indicating whether to show Assembly References
         /// </summary>
         public bool ShowAssemblyReferences { get; set; }
     }
