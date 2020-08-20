@@ -69,11 +69,11 @@ namespace MsBuildProjectReferenceDependencyGraph
         /// <param name="sortProjects">Determines if the output of the DOT Graph should be sorted.</param>
         /// <param name="showAssemblyReferences">Determines if Assembly/PackageReferences should be shown on the graph.</param>
         /// <returns>A string that represents a DOT Graph</returns>
-        internal static string CreateDOTGraph(IDictionary<string, IEnumerable<string>> projectReferenceDependencies, bool anonymizeNames, bool sortProjects, bool showAssemblyReferences)
+        internal static string CreateDOTGraph(IDictionary<string, IEnumerable<string>> projectReferenceDependencies, MSBPROptions options)
         {
             // If we are going to use a anonymizer initialize it
             Anonymizer<string> anonymizer = null;
-            if (anonymizeNames)
+            if (options.AnonymizeNames)
             {
                 anonymizer = new Anonymizer<string>();
             }
@@ -84,7 +84,7 @@ namespace MsBuildProjectReferenceDependencyGraph
 
             // If we need to sort the projects do so at this time
             IEnumerable<KeyValuePair<string, IEnumerable<string>>> projectReferenceDependenciesToPrint = projectReferenceDependencies;
-            if (sortProjects)
+            if (options.SortProjects)
             {
                 projectReferenceDependenciesToPrint = projectReferenceDependencies.OrderBy(kvp => Path.GetFileName(kvp.Key));
             }
@@ -94,14 +94,14 @@ namespace MsBuildProjectReferenceDependencyGraph
             {
                 string projectName = Path.GetFileName(kvp.Key);
 
-                if (anonymizeNames)
+                if (options.AnonymizeNames)
                 {
                     projectName = anonymizer.Anonymoize(projectName);
                 }
 
                 IEnumerable<string> projectReferences = kvp.Value;
 
-                if (sortProjects)
+                if (options.SortProjects)
                 {
                     projectReferences = projectReferences.OrderBy(filePath => Path.GetFileName(filePath));
                 }
@@ -112,7 +112,7 @@ namespace MsBuildProjectReferenceDependencyGraph
                 {
                     string projectDependencyName = Path.GetFileName(projectDependency);
 
-                    if (anonymizeNames)
+                    if (options.AnonymizeNames)
                     {
                         projectDependencyName = anonymizer.Anonymoize(projectDependencyName);
                     }
@@ -122,7 +122,7 @@ namespace MsBuildProjectReferenceDependencyGraph
             }
 
             // If we need to show assembly references find them
-            if (showAssemblyReferences)
+            if (options.ShowAssemblyReferences)
             {
                 sb.AppendLine("//--------------------------");
                 sb.AppendLine("// AssemblyReference Section");
@@ -130,7 +130,7 @@ namespace MsBuildProjectReferenceDependencyGraph
                 Dictionary<string, IEnumerable<string>> assemblyReferenceDependencies = ResolveAssemblyReferenceDependencies(projectReferenceDependencies.Keys);
                 IEnumerable<string> assemblyReferenceSection = GenerateAssemblyReferenceSection(anonymizer, assemblyReferenceDependencies);
 
-                if (sortProjects)
+                if (options.SortProjects)
                 {
                     assemblyReferenceSection = assemblyReferenceSection.OrderBy(x => x);
                 }
@@ -146,7 +146,7 @@ namespace MsBuildProjectReferenceDependencyGraph
                 Dictionary<string, IEnumerable<string>> packageReferenceDependencies = ResolvePackageReferenceDependencies(projectReferenceDependencies.Keys);
                 IEnumerable<string> packageReferenceSection = GeneratePackageReferenceSection(anonymizer, packageReferenceDependencies);
 
-                if (sortProjects)
+                if (options.SortProjects)
                 {
                     packageReferenceSection = packageReferenceSection.OrderBy(x => x);
                 }
