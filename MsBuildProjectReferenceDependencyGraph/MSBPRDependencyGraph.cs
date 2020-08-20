@@ -1,12 +1,11 @@
 ﻿// -----------------------------------------------------------------------
 // <copyright file="MSBPRDependencyGraph.cs" company="Ace Olszowka">
-// Copyright (c) 2018-2019 Ace Olszowka.
+// Copyright (c) 2018-2020 Ace Olszowka.
 // </copyright>
 // -----------------------------------------------------------------------
 
 namespace MsBuildProjectReferenceDependencyGraph
 {
-    using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.IO;
