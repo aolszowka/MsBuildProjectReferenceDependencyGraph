@@ -5,7 +5,7 @@
     <ProjectGuid>{C9DB097F-6BAA-4903-9271-A3FE5BE978EF}</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>
-      <ProjectReference Include="ProjectB.csproj">
+    <ProjectReference Include="ProjectB.csproj">
       <Project>{4fce1d8a-4fda-4385-9b1c-246cb5c82b62}</Project>
       <Name>ProjectB</Name>
     </ProjectReference>

@@ -138,7 +138,10 @@ namespace MsBuildProjectReferenceDependencyGraph
                 {
                     sb.AppendLine(line);
                 }
+            }
 
+            if(options.ShowPackageReferences)
+            {
                 sb.AppendLine("//--------------------------");
                 sb.AppendLine("// PackageReference Section");
                 sb.AppendLine("//--------------------------");
@@ -180,7 +183,7 @@ namespace MsBuildProjectReferenceDependencyGraph
                     assemblyName = anonymizer.Anonymoize(assemblyName);
                 }
 
-                yield return $"\"{assemblyName}\" [style=filled, fillcolor=orange, fontname=\"consolas\", fontcolor=black]";
+                yield return $"\"{assemblyName}\" [class=\"AssemblyReference\"]";
             }
 
             // Now Create the Connections
@@ -228,7 +231,7 @@ namespace MsBuildProjectReferenceDependencyGraph
                     packageReference = anonymizer.Anonymoize(packageReference);
                 }
 
-                yield return $"\"{packageReference}\" [style=filled, fillcolor=goldenrod, fontname=\"consolas\", fontcolor=black]";
+                yield return $"\"{packageReference}\" [class=\"PackageReference\"]";
             }
 
             // Now Create the Connections
