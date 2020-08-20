@@ -60,20 +60,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="TestProjects\ProjectD.csproj">
+    <None Include="TestProjects\ProjectA.csproj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestProjects\ProjectB.csproj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestProjects\ProjectC.csproj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="TestProjects\ProjectA.csproj">
+    <None Include="TestProjects\ProjectD.csproj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestProjects\ProjectB.csproj">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
