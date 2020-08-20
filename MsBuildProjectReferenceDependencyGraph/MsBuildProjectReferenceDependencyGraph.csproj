@@ -50,6 +50,7 @@
     </Compile>
     <Compile Include="Anonymizer.cs" />
     <Compile Include="MSBPRDependencyGraph.cs" />
+    <Compile Include="MSBPROptions.cs" />
     <Compile Include="MSBuildUtilities.cs" />
     <Compile Include="PathUtilities.cs" />
     <Compile Include="Program.cs" />

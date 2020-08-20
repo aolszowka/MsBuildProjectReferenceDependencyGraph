@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="15.0">
+  <PropertyGroup>
+    <AssemblyName>ProjectC</AssemblyName>
+    <ProjectGuid>{C9DB097F-6BAA-4903-9271-A3FE5BE978EF}</ProjectGuid>
+  </PropertyGroup>
+  <ItemGroup>
+      <ProjectReference Include="ProjectB.csproj">
+      <Project>{4fce1d8a-4fda-4385-9b1c-246cb5c82b62}</Project>
+      <Name>ProjectB</Name>
+    </ProjectReference>
+    <ProjectReference Include="ProjectA.csproj">
+      <Project>{5e912636-d29c-4522-bccf-928ea8514343}</Project>
+      <Name>ProjectA</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>
