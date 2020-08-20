@@ -6,7 +6,7 @@
 
 namespace MsBuildProjectReferenceDependencyGraph
 {
-    internal class MSBPROptions
+    public class MSBPROptions
     {
         public bool AnonymizeNames { get; set; }
 

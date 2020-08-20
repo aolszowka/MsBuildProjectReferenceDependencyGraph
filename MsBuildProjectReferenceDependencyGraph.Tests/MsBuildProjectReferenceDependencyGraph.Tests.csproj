@@ -59,7 +59,11 @@
       <Name>MsBuildProjectReferenceDependencyGraph</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="TestProjects\ProjectC.csproj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="TestProjects\ProjectA.csproj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

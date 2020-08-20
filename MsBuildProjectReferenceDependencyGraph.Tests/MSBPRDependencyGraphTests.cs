@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
 // <copyright file="MSBPRDependencyGraphTests.cs" company="Ace Olszowka">
-// Copyright (c) 2019 Ace Olszowka.
+// Copyright (c) 2019-2020 Ace Olszowka.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -9,18 +9,48 @@ namespace MsBuildProjectReferenceDependencyGraph.Tests
     using System.Collections;
     using System.Collections.Generic;
     using System.IO;
+
     using NUnit.Framework;
 
     [TestFixture]
     [Parallelizable(ParallelScope.All)]
     public class MSBPRDependencyGraphTests
     {
+        [TestCaseSource(typeof(CreateDOTGraphTests))]
+        public void CreateDOTGraph(IDictionary<string, IEnumerable<string>> projectReferenceDependencies, MSBPROptions options, string expected)
+        {
+            string actual = MSBPRDependencyGraph.CreateDOTGraph(projectReferenceDependencies, options);
+
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
         [TestCaseSource(typeof(ResolveAssemblyReferenceTests))]
-        public void ResolveAssemblyReferenceDependencies(IEnumerable<string> targetProjects, Dictionary<string,IEnumerable<string>> expected)
+        public void ResolveAssemblyReferenceDependencies(IEnumerable<string> targetProjects, Dictionary<string, IEnumerable<string>> expected)
         {
             Dictionary<string, IEnumerable<string>> actual = MSBPRDependencyGraph.ResolveAssemblyReferenceDependencies(targetProjects);
 
             Assert.That(actual, Is.EquivalentTo(expected));
+        }
+    }
+
+    internal class CreateDOTGraphTests : IEnumerable
+    {
+        public IEnumerator GetEnumerator()
+        {
+            yield return new
+                TestCaseData
+                (
+                    MSBPRDependencyGraph.ResolveProjectReferenceDependencies(new string[] { Path.Combine(TestContext.CurrentContext.TestDirectory, "TestProjects", "ProjectC.csproj") }),
+                    new MSBPROptions { SortProjects = true },
+                    "digraph {\r\n\"ProjectA.csproj\"\r\n\"ProjectB.csproj\"\r\n\"ProjectC.csproj\"\r\n\"ProjectC.csproj\" -> \"ProjectA.csproj\"\r\n\"ProjectC.csproj\" -> \"ProjectB.csproj\"\r\n}\r\n"
+                ).SetName("SortedOutput");
+            yield return new
+                TestCaseData
+                (
+                    MSBPRDependencyGraph.ResolveProjectReferenceDependencies(new string[] { Path.Combine(TestContext.CurrentContext.TestDirectory, "TestProjects", "ProjectC.csproj") }),
+                    new MSBPROptions { SortProjects = true, AnonymizeNames = true },
+                    "digraph {\r\n\"1\"\r\n\"2\"\r\n\"3\"\r\n\"3\" -> \"1\"\r\n\"3\" -> \"2\"\r\n}\r\n"
+                ).SetName("SortAnonymize");
         }
     }
 
@@ -31,7 +61,7 @@ namespace MsBuildProjectReferenceDependencyGraph.Tests
             yield return new
                 TestCaseData
                 (
-                    new string[] { Path.Combine(TestContext.CurrentContext.TestDirectory,"TestProjects", "ProjectA.csproj") },
+                    new string[] { Path.Combine(TestContext.CurrentContext.TestDirectory, "TestProjects", "ProjectA.csproj") },
                     new Dictionary<string, IEnumerable<string>>
                     {
                         {
