@@ -25,5 +25,8 @@ Optionally you can use the Sort Tag (-s,-sort,/s/sort are all valid) to sort the
 ## License
 This is licensed under the MIT License.
 
+## Third Party Licenses
+This project uses other open source contributions see [LICENSES.md](LICENSES.md) for a comprehensive listing.
+
 ## Bugs/Feature Requests
 I accept pull requests and am responsive on GitHub, Let me know!

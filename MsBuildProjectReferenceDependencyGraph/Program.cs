@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
 // <copyright file="Program.cs" company="Ace Olszowka">
-// Copyright (c) 2018-2019 Ace Olszowka.
+// Copyright (c) 2018-2020 Ace Olszowka.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -9,8 +9,10 @@ namespace MsBuildProjectReferenceDependencyGraph
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
-    using System.Text.RegularExpressions;
+
+    using MsBuildProjectReferenceDependencyGraph.Properties;
+
+    using NDesk.Options;
 
     /// <summary>
     /// Toy program to generate a DOT Graph of all ProjectReference dependencies of a project.
@@ -19,43 +21,76 @@ namespace MsBuildProjectReferenceDependencyGraph
     {
         static void Main(string[] args)
         {
-            if (!args.Any())
+            string targetFile = string.Empty;
+            bool anonymizeNames = false;
+            bool showHelp = false;
+            bool sortOutput = false;
+
+            OptionSet p = new OptionSet()
             {
-                Console.WriteLine("You did not provide the required targetProject argument.");
-                Environment.Exit(1);
+                { "<>", Strings.TargetArgumentDescription, v => targetFile = v },
+                { "a|anonymize", Strings.AnonymizeDescription, v => anonymizeNames = v != null },
+                { "s|sort", Strings.SortDescription, v => sortOutput = v != null },
+                { "?|h|help", Strings.HelpDescription, v => showHelp = v != null },
+            };
+
+            try
+            {
+                p.Parse(args);
+            }
+            catch (OptionException)
+            {
+                Console.WriteLine(Strings.ShortUsageMessage);
+                Console.WriteLine($"Try `{Strings.ProgramName} --help` for more information.");
+                return;
             }
 
-            // See if the anonymize flag has been sent
-            bool anonymizeNames = args.Any(current => Regex.IsMatch(current.ToLowerInvariant(), @"^[-\/]+([a]{1}|anonymize)$"));
-
-            // See if the Sort Flag has been set
-            bool sortOutput = args.Any(current => Regex.IsMatch(current.ToLowerInvariant(), @"^[-\/]+([s]{1}|sort)$"));
-
-            string targetArgument = args.First();
-
-            List<string> projectsToEvaluate = new List<string>();
-
-            if (Path.GetExtension(targetArgument).Equals(".sln", StringComparison.InvariantCultureIgnoreCase))
+            if (showHelp || string.IsNullOrEmpty(targetFile))
             {
-                IEnumerable<string> projectsInSolution = MSBuildUtilities.GetProjectsFromSolution(targetArgument);
-
-                // These come back as relative paths; we need to "expand" them
-                // otherwise we'll get duplicates when we go to resolve.
-                projectsInSolution = PathUtilities.ResolveRelativePaths(projectsInSolution);
-
-                projectsToEvaluate.AddRange(projectsInSolution);
+                Environment.ExitCode = ShowUsage(p);
+            }
+            else if (!File.Exists(targetFile))
+            {
+                Console.WriteLine(Strings.InvalidTargetArgument, targetFile);
+                Environment.ExitCode = 9009;
             }
             else
             {
-                // Assume its just a single project
-                projectsToEvaluate.Add(targetArgument);
+                List<string> projectsToEvaluate = new List<string>();
+
+                if (Path.GetExtension(targetFile).Equals(".sln", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    IEnumerable<string> projectsInSolution = MSBuildUtilities.GetProjectsFromSolution(targetFile);
+
+                    // These come back as relative paths; we need to "expand" them
+                    // otherwise we'll get duplicates when we go to resolve.
+                    projectsInSolution = PathUtilities.ResolveRelativePaths(projectsInSolution);
+
+                    projectsToEvaluate.AddRange(projectsInSolution);
+                }
+                else
+                {
+                    // Assume its just a single project
+                    projectsToEvaluate.Add(targetFile);
+                }
+
+                Dictionary<string, IEnumerable<string>> projectReferenceDependencies = MSBPRDependencyGraph.ResolveProjectReferenceDependencies(projectsToEvaluate);
+
+                string output = MSBPRDependencyGraph.CreateDOTGraph(projectReferenceDependencies, anonymizeNames, sortOutput, false);
+
+                Console.WriteLine(output);
             }
+        }
 
-            Dictionary<string, IEnumerable<string>> projectReferenceDependencies = MSBPRDependencyGraph.ResolveProjectReferenceDependencies(projectsToEvaluate);
-
-            string output = MSBPRDependencyGraph.CreateDOTGraph(projectReferenceDependencies, anonymizeNames, sortOutput, false);
-
-            Console.WriteLine(output);
+        private static int ShowUsage(OptionSet p)
+        {
+            Console.WriteLine(Strings.ShortUsageMessage);
+            Console.WriteLine();
+            Console.WriteLine(Strings.LongDescription);
+            Console.WriteLine();
+            Console.WriteLine($"               <>            {Strings.TargetArgumentDescription}");
+            p.WriteOptionDescriptions(Console.Out);
+            return 21;
         }
     }
 }
