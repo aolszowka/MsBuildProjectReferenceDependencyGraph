@@ -31,9 +31,9 @@ namespace MsBuildProjectReferenceDependencyGraph
             {
                 { "<>", Strings.TargetArgumentDescription, v => targetFile = v },
                 { "a|anonymize", Strings.AnonymizeDescription, v => options.AnonymizeNames = v != null },
+                { "sA|ShowAllReferences", Strings.ShowAllReferencesDescription, v => { if(v != null) { options.ShowAssemblyReferences = true; options.ShowPackageReferences = true; } } },
                 { "sar|ShowAssemblyReferences", Strings.ShowAssemblyReferencesDescription, v => options.ShowAssemblyReferences = v != null },
                 { "spr|ShowPackageReferences", Strings.ShowPackageReferencesDescription, v => options.ShowPackageReferences = v != null },
-                { "sA|ShowAllReferences", Strings.ShowAllReferencesDescription, v => { if(v != null) { options.ShowAssemblyReferences = true; options.ShowPackageReferences = true; } } },
                 { "s|sort", Strings.SortDescription, v => options.SortProjects = v != null },
                 { "?|h|help", Strings.HelpDescription, v => showHelp = v != null },
             };
