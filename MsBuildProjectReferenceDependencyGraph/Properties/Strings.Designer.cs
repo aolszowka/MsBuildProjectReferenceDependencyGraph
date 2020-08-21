@@ -107,11 +107,38 @@ namespace MsBuildProjectReferenceDependencyGraph.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Usage: MsBuildProjectReferenceDependencyGraph MyProject.sln [-sort] [-anonymize].
+        ///   Looks up a localized string similar to Usage: MsBuildProjectReferenceDependencyGraph MyProject.sln [-s][-a][-sar][-spr][-sA].
         /// </summary>
         internal static string ShortUsageMessage {
             get {
                 return ResourceManager.GetString("ShortUsageMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show both &quot;Assembly&quot; and &quot;PackageReference&quot; References in graph.
+        /// </summary>
+        internal static string ShowAllReferencesDescription {
+            get {
+                return ResourceManager.GetString("ShowAllReferencesDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show &quot;Assembly&quot; References in graph.
+        /// </summary>
+        internal static string ShowAssemblyReferencesDescription {
+            get {
+                return ResourceManager.GetString("ShowAssemblyReferencesDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show &quot;PackageReference&quot; References in graph.
+        /// </summary>
+        internal static string ShowPackageReferencesDescription {
+            get {
+                return ResourceManager.GetString("ShowPackageReferencesDescription", resourceCulture);
             }
         }
         

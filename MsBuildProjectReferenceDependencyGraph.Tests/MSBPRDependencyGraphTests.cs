@@ -51,6 +51,27 @@ namespace MsBuildProjectReferenceDependencyGraph.Tests
                     new MSBPROptions { SortProjects = true, AnonymizeNames = true },
                     "digraph {\r\n\"1\"\r\n\"2\"\r\n\"3\"\r\n\"3\" -> \"1\"\r\n\"3\" -> \"2\"\r\n}\r\n"
                 ).SetName("SortAnonymize");
+            yield return new
+                TestCaseData
+                (
+                    MSBPRDependencyGraph.ResolveProjectReferenceDependencies(new string[] { Path.Combine(TestContext.CurrentContext.TestDirectory, "TestProjects", "ProjectD.csproj") }),
+                    new MSBPROptions { SortProjects = true, ShowAssemblyReferences = true },
+                    "digraph {\r\n\"ProjectD.csproj\"\r\n//--------------------------\r\n// AssemblyReference Section\r\n//--------------------------\r\n\"Moq\" [class=\"AssemblyReference\"]\r\n\"ProjectD.csproj\" -> \"Moq\"\r\n\"ProjectD.csproj\" -> \"System\"\r\n\"System\" [class=\"AssemblyReference\"]\r\n}\r\n"
+                ).SetName("SortShowAssemblyReferences");
+            yield return new
+                TestCaseData
+                (
+                    MSBPRDependencyGraph.ResolveProjectReferenceDependencies(new string[] { Path.Combine(TestContext.CurrentContext.TestDirectory, "TestProjects", "ProjectD.csproj") }),
+                    new MSBPROptions { SortProjects = true, ShowPackageReferences = true },
+                    "digraph {\r\n\"ProjectD.csproj\"\r\n//--------------------------\r\n// PackageReference Section\r\n//--------------------------\r\n\"NUnit\" [class=\"PackageReference\"]\r\n\"ProjectD.csproj\" -> \"NUnit\"\r\n}\r\n"
+                ).SetName("SortShowPackageReferences");
+            yield return new
+                TestCaseData
+                (
+                    MSBPRDependencyGraph.ResolveProjectReferenceDependencies(new string[] { Path.Combine(TestContext.CurrentContext.TestDirectory, "TestProjects", "ProjectD.csproj") }),
+                    new MSBPROptions { SortProjects = true, ShowAssemblyReferences = true, ShowPackageReferences = true },
+                    "digraph {\r\n\"ProjectD.csproj\"\r\n//--------------------------\r\n// AssemblyReference Section\r\n//--------------------------\r\n\"Moq\" [class=\"AssemblyReference\"]\r\n\"ProjectD.csproj\" -> \"Moq\"\r\n\"ProjectD.csproj\" -> \"System\"\r\n\"System\" [class=\"AssemblyReference\"]\r\n//--------------------------\r\n// PackageReference Section\r\n//--------------------------\r\n\"NUnit\" [class=\"PackageReference\"]\r\n\"ProjectD.csproj\" -> \"NUnit\"\r\n}\r\n"
+                ).SetName("SortShowAssemblyShowPackageReferences");
         }
     }
 

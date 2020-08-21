@@ -22,15 +22,19 @@ namespace MsBuildProjectReferenceDependencyGraph
         static void Main(string[] args)
         {
             string targetFile = string.Empty;
-            bool anonymizeNames = false;
             bool showHelp = false;
-            bool sortOutput = false;
+
+            // Create an Options Object
+            MSBPROptions options = new MSBPROptions();
 
             OptionSet p = new OptionSet()
             {
                 { "<>", Strings.TargetArgumentDescription, v => targetFile = v },
-                { "a|anonymize", Strings.AnonymizeDescription, v => anonymizeNames = v != null },
-                { "s|sort", Strings.SortDescription, v => sortOutput = v != null },
+                { "a|anonymize", Strings.AnonymizeDescription, v => options.AnonymizeNames = v != null },
+                { "sA|ShowAllReferences", Strings.ShowAllReferencesDescription, v => { if(v != null) { options.ShowAssemblyReferences = true; options.ShowPackageReferences = true; } } },
+                { "sar|ShowAssemblyReferences", Strings.ShowAssemblyReferencesDescription, v => options.ShowAssemblyReferences = v != null },
+                { "spr|ShowPackageReferences", Strings.ShowPackageReferencesDescription, v => options.ShowPackageReferences = v != null },
+                { "s|sort", Strings.SortDescription, v => options.SortProjects = v != null },
                 { "?|h|help", Strings.HelpDescription, v => showHelp = v != null },
             };
 
@@ -75,15 +79,6 @@ namespace MsBuildProjectReferenceDependencyGraph
                 }
 
                 Dictionary<string, IEnumerable<string>> projectReferenceDependencies = MSBPRDependencyGraph.ResolveProjectReferenceDependencies(projectsToEvaluate);
-
-                // Create an Options Object
-                MSBPROptions options =
-                    new MSBPROptions()
-                    {
-                        AnonymizeNames = anonymizeNames,
-                        ShowAssemblyReferences = false,
-                        SortProjects = sortOutput,
-                    };
 
                 string output = MSBPRDependencyGraph.CreateDOTGraph(projectReferenceDependencies, options);
 

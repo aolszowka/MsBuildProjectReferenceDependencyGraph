@@ -25,5 +25,10 @@ namespace MsBuildProjectReferenceDependencyGraph
         /// Gets or sets a value indicating whether to show Assembly References
         /// </summary>
         public bool ShowAssemblyReferences { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show PackageReferences
+        /// </summary>
+        public bool ShowPackageReferences { get; set; }
     }
 }
