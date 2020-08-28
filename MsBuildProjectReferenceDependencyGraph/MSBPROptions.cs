@@ -17,11 +17,6 @@ namespace MsBuildProjectReferenceDependencyGraph
         public bool AnonymizeNames { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to sort the graph.
-        /// </summary>
-        public bool SortProjects { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether to show Assembly References
         /// </summary>
         public bool ShowAssemblyReferences { get; set; }
@@ -30,5 +25,10 @@ namespace MsBuildProjectReferenceDependencyGraph
         /// Gets or sets a value indicating whether to show PackageReferences
         /// </summary>
         public bool ShowPackageReferences { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to sort the graph.
+        /// </summary>
+        public bool SortProjects { get; set; }
     }
 }
