@@ -85,13 +85,34 @@ namespace MsBuildProjectReferenceDependencyGraph
             IEnumerable<KeyValuePair<string, IEnumerable<string>>> projectReferenceDependenciesToPrint = projectReferenceDependencies;
             if (options.SortProjects)
             {
-                projectReferenceDependenciesToPrint = projectReferenceDependencies.OrderBy(kvp => Path.GetFileName(kvp.Key));
+                projectReferenceDependenciesToPrint =
+                    projectReferenceDependencies
+                    .OrderBy
+                    (
+                        kvp =>
+                        {
+                            if (options.ShowFullPath)
+                            {
+                                return kvp.Key;
+                            }
+                            else
+                            {
+                                return Path.GetFileName(kvp.Key);
+                            }
+                        }
+                        );
             }
 
             // Perform the ProjectReference Results
             foreach (KeyValuePair<string, IEnumerable<string>> kvp in projectReferenceDependenciesToPrint)
             {
-                string projectName = Path.GetFileName(kvp.Key);
+                // By Default show the full path to the project file
+                string projectName = kvp.Key;
+
+                if (!options.ShowFullPath)
+                {
+                    projectName = Path.GetFileName(kvp.Key);
+                }
 
                 if (options.AnonymizeNames)
                 {
@@ -102,14 +123,19 @@ namespace MsBuildProjectReferenceDependencyGraph
 
                 if (options.SortProjects)
                 {
-                    projectReferences = projectReferences.OrderBy(filePath => Path.GetFileName(filePath));
+                    projectReferences = projectReferences.OrderBy(filePath => filePath);
                 }
 
                 sb.AppendLine($"\"{projectName}\"");
 
                 foreach (string projectDependency in projectReferences)
                 {
-                    string projectDependencyName = Path.GetFileName(projectDependency);
+                    string projectDependencyName = projectDependency;
+
+                    if (!options.ShowFullPath)
+                    {
+                        projectDependencyName = Path.GetFileName(projectDependencyName);
+                    }
 
                     if (options.AnonymizeNames)
                     {
@@ -127,7 +153,7 @@ namespace MsBuildProjectReferenceDependencyGraph
                 sb.AppendLine("// AssemblyReference Section");
                 sb.AppendLine("//--------------------------");
                 Dictionary<string, IEnumerable<string>> assemblyReferenceDependencies = ResolveAssemblyReferenceDependencies(projectReferenceDependencies.Keys);
-                IEnumerable<string> assemblyReferenceSection = GenerateAssemblyReferenceSection(anonymizer, assemblyReferenceDependencies);
+                IEnumerable<string> assemblyReferenceSection = GenerateAssemblyReferenceSection(anonymizer, options, assemblyReferenceDependencies);
 
                 if (options.SortProjects)
                 {
@@ -140,13 +166,13 @@ namespace MsBuildProjectReferenceDependencyGraph
                 }
             }
 
-            if(options.ShowPackageReferences)
+            if (options.ShowPackageReferences)
             {
                 sb.AppendLine("//--------------------------");
                 sb.AppendLine("// PackageReference Section");
                 sb.AppendLine("//--------------------------");
                 Dictionary<string, IEnumerable<string>> packageReferenceDependencies = ResolvePackageReferenceDependencies(projectReferenceDependencies.Keys);
-                IEnumerable<string> packageReferenceSection = GeneratePackageReferenceSection(anonymizer, packageReferenceDependencies);
+                IEnumerable<string> packageReferenceSection = GeneratePackageReferenceSection(anonymizer, options, packageReferenceDependencies);
 
                 if (options.SortProjects)
                 {
@@ -170,7 +196,7 @@ namespace MsBuildProjectReferenceDependencyGraph
         /// <param name="anonymizer">The Anonymizer (if used) to anonymize names</param>
         /// <param name="assemblyReferences">The Dictionary from <see cref="ResolveAssemblyReferenceDependencies(IEnumerable{string})"/></param>
         /// <returns>An <see cref="IEnumerable{T}"/> that contains the lines to add to the DOT Graph</returns>
-        internal static IEnumerable<string> GenerateAssemblyReferenceSection(Anonymizer<string> anonymizer, Dictionary<string, IEnumerable<string>> assemblyReferences)
+        internal static IEnumerable<string> GenerateAssemblyReferenceSection(Anonymizer<string> anonymizer, MSBPROptions options, Dictionary<string, IEnumerable<string>> assemblyReferences)
         {
             // First we need to create nodes for each of the Assemblies
             IEnumerable<string> distinctAssemblyReferences = assemblyReferences.SelectMany(kvp => kvp.Value).Distinct();
@@ -189,7 +215,11 @@ namespace MsBuildProjectReferenceDependencyGraph
             // Now Create the Connections
             foreach (KeyValuePair<string, IEnumerable<string>> kvp in assemblyReferences)
             {
-                string projectName = Path.GetFileName(kvp.Key);
+                string projectName = kvp.Key;
+                if (!options.ShowFullPath)
+                {
+                    projectName = Path.GetFileName(kvp.Key);
+                }
 
                 if (anonymizer != null)
                 {
@@ -218,7 +248,7 @@ namespace MsBuildProjectReferenceDependencyGraph
         /// <param name="anonymizer">The Anonymizer (if used) to anonymize names</param>
         /// <param name="packageReferences">The Dictionary from <see cref="ResolvePackageReferenceDependencies(IEnumerable{string})"/></param>
         /// <returns>An <see cref="IEnumerable{T}"/> that contains the lines to add to the DOT Graph</returns>
-        internal static IEnumerable<string> GeneratePackageReferenceSection(Anonymizer<string> anonymizer, Dictionary<string, IEnumerable<string>> packageReferences)
+        internal static IEnumerable<string> GeneratePackageReferenceSection(Anonymizer<string> anonymizer, MSBPROptions options, Dictionary<string, IEnumerable<string>> packageReferences)
         {
             // First we need to create the nodes for each of the Packages
             IEnumerable<string> distinctPackageReferences = packageReferences.SelectMany(kvp => kvp.Value).Distinct();
@@ -237,7 +267,11 @@ namespace MsBuildProjectReferenceDependencyGraph
             // Now Create the Connections
             foreach (KeyValuePair<string, IEnumerable<string>> kvp in packageReferences)
             {
-                string projectName = Path.GetFileName(kvp.Key);
+                string projectName = kvp.Key;
+                if (!options.ShowFullPath)
+                {
+                    projectName = Path.GetFileName(kvp.Key);
+                }
 
                 if (anonymizer != null)
                 {

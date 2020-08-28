@@ -21,6 +21,8 @@ namespace MsBuildProjectReferenceDependencyGraph
         /// </summary>
         public bool ShowAssemblyReferences { get; set; }
 
+        public bool ShowFullPath { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether to show PackageReferences
         /// </summary>

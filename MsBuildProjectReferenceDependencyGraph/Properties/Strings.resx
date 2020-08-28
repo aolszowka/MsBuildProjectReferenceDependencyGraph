@@ -143,6 +143,9 @@ a DOT Graph of all its ProjectReference Elements.</value>
   <data name="ShowAssemblyReferencesDescription" xml:space="preserve">
     <value>Show "Assembly" References in graph</value>
   </data>
+  <data name="ShowFullPathDescription" xml:space="preserve">
+    <value>Show the Full Path to the Project File</value>
+  </data>
   <data name="ShowPackageReferencesDescription" xml:space="preserve">
     <value>Show "PackageReference" References in graph</value>
   </data>
