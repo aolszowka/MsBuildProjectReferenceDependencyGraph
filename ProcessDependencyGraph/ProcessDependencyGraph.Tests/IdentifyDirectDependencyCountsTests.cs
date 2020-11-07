@@ -6,6 +6,7 @@
 
 namespace ProcessDependencyGraph.Tests
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.IO;
@@ -54,21 +55,21 @@ namespace ProcessDependencyGraph.Tests
                 (
                     "A",
                     DotGraph.LoadDependencyGraph(Path.Combine(TestContext.CurrentContext.TestDirectory, "IdentifyDirectDependencyCountsTests", "TestCase1.g")),
-                    File.ReadAllText(Path.Combine(TestContext.CurrentContext.TestDirectory, "IdentifyDirectDependencyCountsTests", "TestCase1_Result.g"))
+                    File.ReadAllText(Path.Combine(TestContext.CurrentContext.TestDirectory, "IdentifyDirectDependencyCountsTests", "TestCase1_Result.g")).Replace("\r\n", Environment.NewLine)
                 ).SetArgDisplayNames("TestCase1.g");
             yield return new
                 TestCaseData
                 (
                     "36",
                     DotGraph.LoadDependencyGraph(Path.Combine(TestContext.CurrentContext.TestDirectory, "IdentifyDirectDependencyCountsTests", "TestCase2.g")),
-                    File.ReadAllText(Path.Combine(TestContext.CurrentContext.TestDirectory, "IdentifyDirectDependencyCountsTests", "TestCase2_Result.g"))
+                    File.ReadAllText(Path.Combine(TestContext.CurrentContext.TestDirectory, "IdentifyDirectDependencyCountsTests", "TestCase2_Result.g")).Replace("\r\n", Environment.NewLine)
                 ).SetArgDisplayNames("TestCase2.g");
             yield return new
                 TestCaseData
                 (
                     "A",
                     DotGraph.LoadDependencyGraph(Path.Combine(TestContext.CurrentContext.TestDirectory, "IdentifyDirectDependencyCountsTests", "TestCase3.g")),
-                    File.ReadAllText(Path.Combine(TestContext.CurrentContext.TestDirectory, "IdentifyDirectDependencyCountsTests", "TestCase3_Result.g"))
+                    File.ReadAllText(Path.Combine(TestContext.CurrentContext.TestDirectory, "IdentifyDirectDependencyCountsTests", "TestCase3_Result.g")).Replace("\r\n", Environment.NewLine)
                 ).SetArgDisplayNames("TestCase3.g");
         }
     }
