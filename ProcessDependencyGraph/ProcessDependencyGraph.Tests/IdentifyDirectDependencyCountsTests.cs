@@ -1,4 +1,9 @@
-﻿
+﻿// -----------------------------------------------------------------------
+// <copyright file="IdentifyDirectDependencyCountsTests.cs" company="Ace Olszowka">
+// Copyright (c) 2020 Ace Olszowka.
+// </copyright>
+// -----------------------------------------------------------------------
+
 namespace ProcessDependencyGraph.Tests
 {
     using System.Collections;
