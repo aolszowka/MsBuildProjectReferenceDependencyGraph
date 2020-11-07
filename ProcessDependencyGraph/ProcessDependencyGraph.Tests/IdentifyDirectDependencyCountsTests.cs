@@ -4,7 +4,9 @@ namespace ProcessDependencyGraph.Tests
     using System.Collections;
     using System.Collections.Generic;
     using System.IO;
+
     using DotGraphUtilities;
+
     using NUnit.Framework;
 
     [TestFixture]
@@ -23,7 +25,7 @@ namespace ProcessDependencyGraph.Tests
         public void Walk()
         {
             string targetProject = "A";
-            IDictionary<string, SortedSet<string>> dependencyGraph = DotGraph.LoadDependencyGraph(@"S:\GitHub\MsBuildProjectReferenceDependencyGraph\ProcessDependencyGraph\ProcessDependencyGraph.Tests\IdentifyDirectDependencyCountsTests\TestCase1.g");
+            IDictionary<string, SortedSet<string>> dependencyGraph = DotGraph.LoadDependencyGraph(Path.Combine(TestContext.CurrentContext.TestDirectory, "IdentifyDirectDependencyCountsTests", "TestCase1.g"));
 
             (Dictionary<string, string> ColoringDictionary, Dictionary<string, SortedSet<string>> UniqueProjectsForDependency) expected =
                 (
