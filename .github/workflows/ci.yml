@@ -39,7 +39,7 @@ jobs:
 
       # Build the Project
       - name: Build Source
-        run: dotnet build --configuration Release
+        run: dotnet build -graphBuild -maxCpuCount --configuration Release
 
       # Run the Tests
       - name: Run Tests
@@ -79,7 +79,7 @@ jobs:
 
       # Build the Project
       - name: Build Source
-        run: dotnet build --configuration Release
+        run: dotnet build -graphBuild -maxCpuCount --configuration Release
 
       # Run the Tests
       - name: Run Tests
@@ -96,7 +96,7 @@ jobs:
 
       # Build the Project
       - name: Build Source
-        run: dotnet build --configuration Release
+        run: dotnet build -graphBuild -maxCpuCount --configuration Release
 
       # Run the Tests
       - name: Run Tests
