@@ -7,6 +7,18 @@
     <ProjectGuid>{B87E5404-4E5F-4918-BFEF-73F678FA149C}</ProjectGuid>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
+  <PropertyGroup>
+    <Authors>Ace Olszowka</Authors>
+    <Description>Generate a DOT Graph of a MsBuild Project File or Visual Studio Solution file.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageOutputPath>../nupkg</PackageOutputPath>
+    <PackageProjectUrl>https://github.com/aolszowka/MsBuildProjectReferenceDependencyGraph</PackageProjectUrl>
+    <PackAsTool>true</PackAsTool>
+    <RepositoryUrl>https://github.com/aolszowka/MsBuildProjectReferenceDependencyGraph</RepositoryUrl>
+    <ToolCommandName>create-digraph</ToolCommandName>
+    <VersionPrefix>2.0.0</VersionPrefix>
+    <VersionSuffix>$(VersionSuffix)</VersionSuffix>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\Common\ThirdParty\Options.cs">
       <Link>Options.cs</Link>
