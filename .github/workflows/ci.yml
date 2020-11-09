@@ -60,7 +60,9 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
             name: ${{ github.event.repository.name }}-${{ github.sha }}
-            path: nupkg/*.nupkg
+            path: |
+              nupkg/*.nupkg
+              nupkg/*.snupkg
             if-no-files-found: error
 
       # Publish the Package, but only if on Master
