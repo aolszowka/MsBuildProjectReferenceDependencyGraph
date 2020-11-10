@@ -1,7 +1,13 @@
 # MsBuildProjectReferenceDependencyGraph
+![CI - Master](https://github.com/aolszowka/MsBuildProjectReferenceDependencyGraph/workflows/CI/badge.svg?branch=master)
+
 Utility to take a MsBuild Project File or Visual Studio Solution file and generate a DOT Graph of all its ProjectReference Elements
 
 ## Usage
+`dotnet create-digraph MyProject.csproj > out.g`
+
+or
+
 `MsBuildProjectReferenceDependencyGraph.exe  MyProject.csproj > out.g`
 
 Because the output is simply piped to Standard Out we redirect it to an output file for further processing by other utilities.
@@ -9,8 +15,15 @@ Because the output is simply piped to Standard Out we redirect it to an output f
 For example you can use Webgraphviz (http://www.webgraphviz.com/) to produce a graph online or download and install GraphViz (https://graphviz.gitlab.io/)
 
 ### Extended Help
+There are now two ways to run this tool:
+
+1. (Compiled Executable) Invoke the tool via `MsBuildProjectReferenceDependencyGraph` and pass the arguments.
+2. (Dotnet Tool) Install this tool using the following command `dotnet tool install MsBuildProjectReferenceDependencyGraph` (assuming that you have the nuget package in your feed) then invoke it via `dotnet create-digraph`
+
+In both cases the flags to the tooling are identical:
+
 ```text
-Usage: MsBuildProjectReferenceDependencyGraph MyProject.sln [-s][-a][-sar][-spr][-sA]
+Usage: MyProject.sln-or-proj [-s][-a][-sar][-spr][-sA]
 
 Takes either an MsBuild Project File or Visual Studio Solution File and generate
 a DOT Graph of all its ProjectReference Elements.
@@ -18,7 +31,7 @@ a DOT Graph of all its ProjectReference Elements.
                <>            The Project or Solution to evaluate
   -a, --anonymize            Anonymizes the names of all references
       --sA, --ShowAllReferences
-                             Show both "Assembly" and "PackageReference" 
+                             Show both "Assembly" and "PackageReference"
                                References in graph
       --sar, --ShowAssemblyReferences
                              Show "Assembly" References in graph
@@ -26,14 +39,14 @@ a DOT Graph of all its ProjectReference Elements.
                              Show "PackageReference" References in graph
   -s, --sort                 Sort the output of this tool
   -?, -h, --help             Show this message and exit
-
 ```
 
+In all of the examples below we show this tool being invoked via the `dotnet create-digraph` command but it would alternatively work with `MsBuildProjectReferenceDependencyGraph.exe` as well.
 
 ### Anonymize (-a | --anonymize)
 Produce an anonymized version of your graph. This is useful for when you wish to share the general shape of your dependency tree without exposing any privileged information.
 
-`MsBuildProjectReferenceDependencyGraph.exe  MyProject.csproj -a > out.g`
+`dotnet create-diagraph MyProject.csproj -a > out.g`
 
 ```text
 digraph {
@@ -55,7 +68,7 @@ Be warned that this can generate __extremely complex__ graphs.
 #### ShowAllReferences (-sA | --ShowAllReferences)
 This combines all of the flags described below into a single argument.
 
-`MsBuildProjectReferenceDependencyGraph.exe  ProjectD.csproj -sA > out.g`
+`dotnet create-diagraph ProjectD.csproj -sA > out.g`
 
 ```text
 digraph {
@@ -99,7 +112,7 @@ Project 3
 
 This tooling treats all them as the same reference, even though MSBuild will not. This was done to simplify the processing of the dependencies.
 
-`MsBuildProjectReferenceDependencyGraph.exe  MoqProject.csproj -sA > out.g`
+`dotnet create-diagraph  MoqProject.csproj -sA > out.g`
 
 ```text
 digraph {
@@ -133,7 +146,7 @@ Project 2
 
 This tooling treats all them as the same reference, even though MSBuild will not. This was done to simplify the processing of the dependencies.
 
-`MsBuildProjectReferenceDependencyGraph.exe  NUnitProject.csproj -sA > out.g`
+`dotnet create-diagraph NUnitProject.csproj -sA > out.g`
 
 ```text
 digraph {
@@ -149,7 +162,13 @@ digraph {
 ### Sort (-s | --sort)
 Sort the output (based on filename) if you need the output to be idempotent. For example consider using the tool to dump trees in a tight loop and committing the changes (if any) into a version control system.
 
-`MsBuildProjectReferenceDependencyGraph.exe  MyProject.csproj -s > out.g`
+`dotnet create-diagraph  MyProject.csproj -s > out.g`
+
+## GOTCHAs
+### Line Endings
+This tool heavily utilizes `StringBuilder.AppendLine(string)` to build up the digraphs. As of the writing of this program, Microsoft implements this using `Envrionment.NewLine` and does not provide a way for consumers of `StringBuilder` to override this.
+
+This means that when this tool is used on non-Windows platforms the line endings of the generated digraph files are `\n` (Line Feed) as opposed to `\r\n` (Carriage Return Line Feed) in Windows. Currently this tool does not attempt to perform any normalization and is left as an exercise to the reader.
 
 ## License
 This is licensed under the MIT License.
