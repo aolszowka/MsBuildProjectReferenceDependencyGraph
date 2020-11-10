@@ -107,7 +107,7 @@ namespace MsBuildProjectReferenceDependencyGraph.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Usage: MsBuildProjectReferenceDependencyGraph MyProject.sln [-s][-a][-sar][-spr][-sA].
+        ///   Looks up a localized string similar to Usage: MyProject.sln-or-proj [-s][-a][-sar][-spr][-sA].
         /// </summary>
         internal static string ShortUsageMessage {
             get {
