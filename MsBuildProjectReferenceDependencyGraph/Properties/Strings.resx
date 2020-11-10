@@ -135,7 +135,7 @@ a DOT Graph of all its ProjectReference Elements.</value>
     <value>MsBuildProjectReferenceDependencyGraph</value>
   </data>
   <data name="ShortUsageMessage" xml:space="preserve">
-    <value>Usage: MsBuildProjectReferenceDependencyGraph MyProject.sln [-s][-a][-sar][-spr][-sA]</value>
+    <value>Usage: MyProject.sln-or-proj [-s][-a][-sar][-spr][-sA]</value>
   </data>
   <data name="ShowAllReferencesDescription" xml:space="preserve">
     <value>Show both "Assembly" and "PackageReference" References in graph</value>

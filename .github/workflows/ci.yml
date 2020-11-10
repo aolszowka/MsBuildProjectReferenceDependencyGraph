@@ -1,0 +1,105 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  build-ubuntu-primary:
+    runs-on: ubuntu-latest
+    env:
+      DOTNET_NOLOGO: true
+
+    steps:
+      # Grab The Source Code
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # Configure Dotnet to push packages to GitHub Package Repo (GPR)
+      - name: Configure Dotnet SDK for GitHub Package Repo (GPR)
+        uses: actions/setup-dotnet@v1.7.2
+        with:
+          dotnet-version: '3.1.x' # SDK Version to use.
+          source-url: https://nuget.pkg.github.com/${{github.repository_owner}}/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      # Restore all of our .NET Core Local Tools
+      - name: .NET Core Local Tool Restore
+        run: dotnet tool restore --add-source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-tools/nuget/v3/index.json
+
+      # Restore any NuGet Packages Used by this Project
+      - name: Restore Packages
+        run: dotnet restore
+
+      # Verify that the code is formatted correctly
+      - name: Format Files
+        run: dotnet format --fix-style warn --fix-analyzers warn --check
+
+      # Build the Project
+      - name: Build Source
+        run: dotnet build -graphBuild -maxCpuCount --configuration Release
+
+      # Run the Tests
+      - name: Run Tests
+        run: dotnet test --configuration Release
+
+      # Package the Project (CI/Branch)
+      - name: Package (Branch)
+        if: ${{ github.ref != 'refs/heads/master' }}
+        run: dotnet pack --configuration Release --no-build --version-suffix "ci-${{ github.sha }}"
+
+      # Package the Project (master/Release)
+      - name: Package (Release)
+        if: ${{ github.ref == 'refs/heads/master' }}
+        run: dotnet pack --configuration Release --no-build
+
+      # Always Upload the Assets
+      - name: Upload Artifacts to GitHub
+        uses: actions/upload-artifact@v2
+        with:
+            name: ${{ github.event.repository.name }}-${{ github.sha }}
+            path: |
+              nupkg/*.nupkg
+              nupkg/*.snupkg
+            if-no-files-found: error
+
+      # Publish the Package, but only if on Master
+#      - name: Publish the package to GPR (Release ONLY)
+#        if: ${{ github.ref == 'refs/heads/master' }}
+#        run: dotnet nuget push nupkg/*.nupkg
+
+  # This is intended to build/test on Windows
+  test-windows:
+    runs-on: windows-latest
+
+    steps:
+      # Grab The Source Code
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # Build the Project
+      - name: Build Source
+        run: dotnet build -graphBuild -maxCpuCount --configuration Release
+
+      # Run the Tests
+      - name: Run Tests
+        run: dotnet test --configuration Release
+
+  # This is intended to build/test on MacOS
+  test-macos:
+    runs-on: macos-latest
+
+    steps:
+      # Grab The Source Code
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # Build the Project
+      - name: Build Source
+        run: dotnet build -graphBuild -maxCpuCount --configuration Release
+
+      # Run the Tests
+      - name: Run Tests
+        run: dotnet test --configuration Release
