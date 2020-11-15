@@ -6,6 +6,7 @@
 
 namespace MsBuildProjectReferenceDependencyGraph.Tests
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.IO;
@@ -42,35 +43,35 @@ namespace MsBuildProjectReferenceDependencyGraph.Tests
                 (
                     MSBPRDependencyGraph.ResolveProjectReferenceDependencies(new string[] { Path.Combine(TestContext.CurrentContext.TestDirectory, "TestProjects", "ProjectC.csproj") }),
                     new MSBPROptions { SortProjects = true },
-                    "digraph {\r\n\"ProjectA.csproj\"\r\n\"ProjectB.csproj\"\r\n\"ProjectC.csproj\"\r\n\"ProjectC.csproj\" -> \"ProjectA.csproj\"\r\n\"ProjectC.csproj\" -> \"ProjectB.csproj\"\r\n}\r\n"
+                    $"digraph {{{Environment.NewLine}\"ProjectA.csproj\"{Environment.NewLine}\"ProjectB.csproj\"{Environment.NewLine}\"ProjectC.csproj\"{Environment.NewLine}\"ProjectC.csproj\" -> \"ProjectA.csproj\"{Environment.NewLine}\"ProjectC.csproj\" -> \"ProjectB.csproj\"{Environment.NewLine}}}{Environment.NewLine}"
                 ).SetName("SortedOutput");
             yield return new
                 TestCaseData
                 (
                     MSBPRDependencyGraph.ResolveProjectReferenceDependencies(new string[] { Path.Combine(TestContext.CurrentContext.TestDirectory, "TestProjects", "ProjectC.csproj") }),
                     new MSBPROptions { SortProjects = true, AnonymizeNames = true },
-                    "digraph {\r\n\"1\"\r\n\"2\"\r\n\"3\"\r\n\"3\" -> \"1\"\r\n\"3\" -> \"2\"\r\n}\r\n"
+                    $"digraph {{{Environment.NewLine}\"1\"{Environment.NewLine}\"2\"{Environment.NewLine}\"3\"{Environment.NewLine}\"3\" -> \"1\"{Environment.NewLine}\"3\" -> \"2\"{Environment.NewLine}}}{Environment.NewLine}"
                 ).SetName("SortAnonymize");
             yield return new
                 TestCaseData
                 (
                     MSBPRDependencyGraph.ResolveProjectReferenceDependencies(new string[] { Path.Combine(TestContext.CurrentContext.TestDirectory, "TestProjects", "ProjectD.csproj") }),
                     new MSBPROptions { SortProjects = true, ShowAssemblyReferences = true },
-                    "digraph {\r\n\"ProjectD.csproj\"\r\n//--------------------------\r\n// AssemblyReference Section\r\n//--------------------------\r\n\"Moq\" [class=\"AssemblyReference\"]\r\n\"ProjectD.csproj\" -> \"Moq\"\r\n\"ProjectD.csproj\" -> \"System\"\r\n\"System\" [class=\"AssemblyReference\"]\r\n}\r\n"
+                    $"digraph {{{Environment.NewLine}\"ProjectD.csproj\"{Environment.NewLine}//--------------------------{Environment.NewLine}// AssemblyReference Section{Environment.NewLine}//--------------------------{Environment.NewLine}\"Moq\" [class=\"AssemblyReference\"]{Environment.NewLine}\"ProjectD.csproj\" -> \"Moq\"{Environment.NewLine}\"ProjectD.csproj\" -> \"System\"{Environment.NewLine}\"System\" [class=\"AssemblyReference\"]{Environment.NewLine}}}{Environment.NewLine}"
                 ).SetName("SortShowAssemblyReferences");
             yield return new
                 TestCaseData
                 (
                     MSBPRDependencyGraph.ResolveProjectReferenceDependencies(new string[] { Path.Combine(TestContext.CurrentContext.TestDirectory, "TestProjects", "ProjectD.csproj") }),
                     new MSBPROptions { SortProjects = true, ShowPackageReferences = true },
-                    "digraph {\r\n\"ProjectD.csproj\"\r\n//--------------------------\r\n// PackageReference Section\r\n//--------------------------\r\n\"NUnit\" [class=\"PackageReference\"]\r\n\"ProjectD.csproj\" -> \"NUnit\"\r\n}\r\n"
+                    $"digraph {{{Environment.NewLine}\"ProjectD.csproj\"{Environment.NewLine}//--------------------------{Environment.NewLine}// PackageReference Section{Environment.NewLine}//--------------------------{Environment.NewLine}\"NUnit\" [class=\"PackageReference\"]{Environment.NewLine}\"ProjectD.csproj\" -> \"NUnit\"{Environment.NewLine}}}{Environment.NewLine}"
                 ).SetName("SortShowPackageReferences");
             yield return new
                 TestCaseData
                 (
                     MSBPRDependencyGraph.ResolveProjectReferenceDependencies(new string[] { Path.Combine(TestContext.CurrentContext.TestDirectory, "TestProjects", "ProjectD.csproj") }),
                     new MSBPROptions { SortProjects = true, ShowAssemblyReferences = true, ShowPackageReferences = true },
-                    "digraph {\r\n\"ProjectD.csproj\"\r\n//--------------------------\r\n// AssemblyReference Section\r\n//--------------------------\r\n\"Moq\" [class=\"AssemblyReference\"]\r\n\"ProjectD.csproj\" -> \"Moq\"\r\n\"ProjectD.csproj\" -> \"System\"\r\n\"System\" [class=\"AssemblyReference\"]\r\n//--------------------------\r\n// PackageReference Section\r\n//--------------------------\r\n\"NUnit\" [class=\"PackageReference\"]\r\n\"ProjectD.csproj\" -> \"NUnit\"\r\n}\r\n"
+                    $"digraph {{{Environment.NewLine}\"ProjectD.csproj\"{Environment.NewLine}//--------------------------{Environment.NewLine}// AssemblyReference Section{Environment.NewLine}//--------------------------{Environment.NewLine}\"Moq\" [class=\"AssemblyReference\"]{Environment.NewLine}\"ProjectD.csproj\" -> \"Moq\"{Environment.NewLine}\"ProjectD.csproj\" -> \"System\"{Environment.NewLine}\"System\" [class=\"AssemblyReference\"]{Environment.NewLine}//--------------------------{Environment.NewLine}// PackageReference Section{Environment.NewLine}//--------------------------{Environment.NewLine}\"NUnit\" [class=\"PackageReference\"]{Environment.NewLine}\"ProjectD.csproj\" -> \"NUnit\"{Environment.NewLine}}}{Environment.NewLine}"
                 ).SetName("SortShowAssemblyShowPackageReferences");
         }
     }

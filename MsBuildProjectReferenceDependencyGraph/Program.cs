@@ -76,7 +76,8 @@ namespace MsBuildProjectReferenceDependencyGraph
                 else
                 {
                     // Assume its just a single project
-                    projectsToEvaluate.Add(targetFile);
+                    FileInfo fi = new FileInfo(targetFile);
+                    projectsToEvaluate.Add(fi.FullName);
                 }
 
                 Dictionary<string, IEnumerable<string>> projectReferenceDependencies = MSBPRDependencyGraph.ResolveProjectReferenceDependencies(projectsToEvaluate);
