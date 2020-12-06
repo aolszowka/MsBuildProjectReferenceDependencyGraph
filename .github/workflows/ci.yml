@@ -16,15 +16,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      # Configure Dotnet to push packages to GitHub Package Repo (GPR)
-      - name: Configure Dotnet SDK for GitHub Package Repo (GPR)
-        uses: actions/setup-dotnet@v1.7.2
-        with:
-          dotnet-version: '3.1.x' # SDK Version to use.
-          source-url: https://nuget.pkg.github.com/${{github.repository_owner}}/index.json
-        env:
-          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
       # Restore all of our .NET Core Local Tools
       - name: .NET Core Local Tool Restore
         run: dotnet tool restore --add-source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-tools/nuget/v3/index.json
@@ -66,9 +57,11 @@ jobs:
             if-no-files-found: error
 
       # Publish the Package, but only if on Master
-#      - name: Publish the package to GPR (Release ONLY)
-#        if: ${{ github.ref == 'refs/heads/master' }}
-#        run: dotnet nuget push nupkg/*.nupkg
+      - name: Publish the package to GPR (Release ONLY)
+        if: ${{ github.ref == 'refs/heads/master' }}
+        run: dotnet nuget push nupkg/*.nupkg --source https://nuget.pkg.github.com/${{github.repository_owner}}/index.json --api-key ${GITHUB_TOKEN}
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
   # This is intended to build/test on Windows
   test-windows:
