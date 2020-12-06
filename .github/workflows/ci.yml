@@ -59,7 +59,7 @@ jobs:
       # Publish the Package, but only if on Master
       - name: Publish the package to GPR (Release ONLY)
         if: ${{ github.ref == 'refs/heads/master' }}
-        run: dotnet nuget push 'nupkg/*.nupkg' --source https://nuget.pkg.github.com/${{github.repository_owner}}/index.json --api-key ${GITHUB_TOKEN}
+        run: dotnet nuget push 'nupkg/*.nupkg' --source https://nuget.pkg.github.com/${{github.repository_owner}}/index.json --api-key ${GITHUB_TOKEN} --skip-duplicate
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
