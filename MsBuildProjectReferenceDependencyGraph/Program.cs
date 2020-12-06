@@ -9,6 +9,7 @@ namespace MsBuildProjectReferenceDependencyGraph
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
 
     using MsBuildProjectReferenceDependencyGraph.Properties;
 
@@ -68,7 +69,7 @@ namespace MsBuildProjectReferenceDependencyGraph
 
                     // These come back as relative paths; we need to "expand" them
                     // otherwise we'll get duplicates when we go to resolve.
-                    projectsInSolution = PathUtilities.ResolveRelativePaths(projectsInSolution);
+                    projectsInSolution = projectsInSolution.Select(relativeProjectPath => Path.GetFullPath(relativeProjectPath));
 
                     projectsToEvaluate.AddRange(projectsInSolution);
                 }

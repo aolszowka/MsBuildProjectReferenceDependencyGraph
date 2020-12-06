@@ -11,6 +11,7 @@ namespace MsBuildProjectReferenceDependencyGraph
     using System.Linq;
     using System.Reflection;
     using System.Xml.Linq;
+
     using Microsoft.Build.Construction;
 
     /// <summary>
@@ -18,7 +19,7 @@ namespace MsBuildProjectReferenceDependencyGraph
     /// </summary>
     public class MSBuildUtilities
     {
-        private static XNamespace msbuildNS = "http://schemas.microsoft.com/developer/msbuild/2003";
+        private static readonly XNamespace msbuildNS = "http://schemas.microsoft.com/developer/msbuild/2003";
 
         /// <summary>
         ///     Gets an IEnumerable of strings representing the fully qualified
@@ -36,7 +37,7 @@ namespace MsBuildProjectReferenceDependencyGraph
                 .ProjectsInOrder
                 .Where(project => IsSupportedProjectType(project))
                 .Select(project => project.RelativePath)
-                .Select(projectRelativePath => PathUtilities.ResolveRelativePath(solutionFolder, projectRelativePath));
+                .Select(projectRelativePath => Path.GetFullPath(projectRelativePath, solutionFolder));
         }
 
         /// <summary>
@@ -145,7 +146,7 @@ namespace MsBuildProjectReferenceDependencyGraph
             foreach (XElement projectReference in projectReferences)
             {
                 string relativeProjectPath = projectReference.Attribute("Include").Value;
-                string resolvedPath = PathUtilities.ResolveRelativePath(Path.GetDirectoryName(targetProject), relativeProjectPath);
+                string resolvedPath = Path.GetFullPath(relativeProjectPath, Path.GetDirectoryName(targetProject));
                 yield return resolvedPath;
             }
         }
