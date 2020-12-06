@@ -16,7 +16,7 @@
     <PackAsTool>true</PackAsTool>
     <RepositoryUrl>https://github.com/aolszowka/MsBuildProjectReferenceDependencyGraph</RepositoryUrl>
     <ToolCommandName>create-digraph</ToolCommandName>
-    <VersionPrefix>2.0.0</VersionPrefix>
+    <VersionPrefix>2.0.1</VersionPrefix>
     <VersionSuffix>$(VersionSuffix)</VersionSuffix>
   </PropertyGroup>
   <PropertyGroup>
@@ -33,7 +33,6 @@
     <Compile Include="MSBPRDependencyGraph.cs" />
     <Compile Include="MSBPROptions.cs" />
     <Compile Include="MSBuildUtilities.cs" />
-    <Compile Include="PathUtilities.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Strings.Designer.cs">
