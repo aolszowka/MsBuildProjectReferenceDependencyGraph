@@ -6,6 +6,7 @@
 
 namespace MsBuildProjectReferenceDependencyGraph
 {
+    using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.IO;
@@ -26,7 +27,7 @@ namespace MsBuildProjectReferenceDependencyGraph
         internal static Dictionary<string, IEnumerable<string>> ResolveProjectReferenceDependencies(IEnumerable<string> targetProjects)
         {
             Stack<string> unresolvedProjects = new Stack<string>();
-            Dictionary<string, IEnumerable<string>> resolvedProjects = new Dictionary<string, IEnumerable<string>>();
+            Dictionary<string, IEnumerable<string>> resolvedProjects = new Dictionary<string, IEnumerable<string>>(StringComparer.InvariantCultureIgnoreCase);
 
             // Load up the initial projects to the stack
             foreach (string targetProject in targetProjects.Distinct())
@@ -279,7 +280,7 @@ namespace MsBuildProjectReferenceDependencyGraph
             );
 
             // Convert this into the Dictionary
-            Dictionary<string, IEnumerable<string>> result = new Dictionary<string, IEnumerable<string>>();
+            Dictionary<string, IEnumerable<string>> result = new Dictionary<string, IEnumerable<string>>(StringComparer.InvariantCultureIgnoreCase);
             foreach (KeyValuePair<string, IEnumerable<string>> kvp in resolvedAssemblyReferences)
             {
                 result.Add(kvp.Key, kvp.Value);
@@ -307,7 +308,7 @@ namespace MsBuildProjectReferenceDependencyGraph
             );
 
             // Convert this into the Dictionary
-            Dictionary<string, IEnumerable<string>> result = new Dictionary<string, IEnumerable<string>>();
+            Dictionary<string, IEnumerable<string>> result = new Dictionary<string, IEnumerable<string>>(StringComparer.InvariantCultureIgnoreCase);
             foreach (KeyValuePair<string, IEnumerable<string>> kvp in resolvedPackageReferences)
             {
                 result.Add(kvp.Key, kvp.Value);
