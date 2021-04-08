@@ -6,6 +6,7 @@
 
 namespace ProcessParallelAbility
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -40,7 +41,7 @@ namespace ProcessParallelAbility
         /// <returns>A structure in which the Key is the project and the value is the depth within the given dependency tree.</returns>
         internal static IDictionary<string, int> ResolveParallelTree(IDictionary<string, SortedSet<string>> dependencyTree)
         {
-            IDictionary<string, int> parallelBuildTree = new Dictionary<string, int>();
+            IDictionary<string, int> parallelBuildTree = new Dictionary<string, int>(StringComparer.InvariantCultureIgnoreCase);
 
             foreach (KeyValuePair<string, SortedSet<string>> dotGraphEntry in dependencyTree)
             {
