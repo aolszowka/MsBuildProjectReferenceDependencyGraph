@@ -6,6 +6,7 @@
 
 namespace MsBuildProjectReferenceDependencyGraph
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -139,16 +140,33 @@ namespace MsBuildProjectReferenceDependencyGraph
         /// <returns>An IEnumerable that contains all the fully qualified ProjectReference paths.</returns>
         public static IEnumerable<string> ProjectDependencies(string targetProject)
         {
-            XDocument projXml = XDocument.Load(targetProject);
+            XDocument projXml = null;
+            try
+            {
+                projXml = XDocument.Load(targetProject);
+            }
+            catch (DirectoryNotFoundException)
+            {
+                Console.Error.WriteLine($@"ERROR: Could not load directory for {targetProject}");
+            }
+            catch (FileNotFoundException)
+            {
+                Console.Error.WriteLine($@"ERROR: Could not load file for {targetProject}");
+            }
+
+            if (projXml == null) yield break;
 
             IEnumerable<XElement> projectReferences = projXml.Descendants(msbuildNS + "ProjectReference");
 
             foreach (XElement projectReference in projectReferences)
             {
                 string relativeProjectPath = projectReference.Attribute("Include").Value;
-                string resolvedPath = Path.GetFullPath(relativeProjectPath, Path.GetDirectoryName(targetProject));
+                string resolvedPath = Path.GetFullPath(UrlDecodePaths(relativeProjectPath),
+                    Path.GetDirectoryName(targetProject));
                 yield return resolvedPath;
             }
         }
+
+        private static string UrlDecodePaths(string path) => path.Replace("%20", " ");
     }
 }
