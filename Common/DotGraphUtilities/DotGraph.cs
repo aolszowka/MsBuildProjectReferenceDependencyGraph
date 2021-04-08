@@ -18,7 +18,7 @@ namespace DotGraphUtilities
     {
         public static IDictionary<string, SortedSet<string>> LoadDependencyGraph(string targetFile)
         {
-            IDictionary<string, SortedSet<string>> result = new SortedDictionary<string, SortedSet<string>>();
+            IDictionary<string, SortedSet<string>> result = new SortedDictionary<string, SortedSet<string>>(StringComparer.InvariantCultureIgnoreCase);
 
             IEnumerable<string> validDigraphLines = ParseForValidDigraphLines(targetFile);
 
