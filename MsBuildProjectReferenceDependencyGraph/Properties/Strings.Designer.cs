@@ -134,6 +134,15 @@ namespace MsBuildProjectReferenceDependencyGraph.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show the Full Path to the Project File.
+        /// </summary>
+        internal static string ShowFullPathDescription {
+            get {
+                return ResourceManager.GetString("ShowFullPathDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show &quot;PackageReference&quot; References in graph.
         /// </summary>
         internal static string ShowPackageReferencesDescription {
